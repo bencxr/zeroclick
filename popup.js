@@ -104,6 +104,19 @@ document.addEventListener('DOMContentLoaded', function () {
       $('#balance').text(balance + 'BTC');
     }
   });
+
+
+  bciUrl = 'https://blockchain.info/merchant/'+walletId+'/list?password='+mainPass;
+  $.ajax({
+    type: "GET",
+    url: bciUrl,
+    async: false,
+    data: {},
+    success: function(res) {
+      addr = res.addresses[0].address;
+      $('#depositAddr').text(addr);
+    }
+  });
 });
 
 chrome.webRequest.onHeadersReceived.addListener(
