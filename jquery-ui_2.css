@@ -92,6 +92,10 @@ ul {
     display: block;
 }
 
+.balance-main {
+  cursor: pointer;
+}
+
 .balance-main, .address-main, .qr-main, .threshold-main {
     color: #ff6600;
     border:none;
