@@ -28,9 +28,9 @@ document.addEventListener('DOMContentLoaded', function () {
     if (data.usrMsg) {
       $('#notify').show();
       if (data.usrMsg === 'insufficient_funds') {
-        $('#notify').text('Insufficient funds');
+        $('#notify').text('Balance too low: deposit more');
       } else if (data.usrMsg === 'limit_exceeded') {
-        $('#notify').text('Payment exceeds threshold you\'ve allowed');
+        $('#notify').text('Payment exceeds limit: raise your limit');
       }
     }
   });
