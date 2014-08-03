@@ -55,10 +55,9 @@ chrome.webRequest.onHeadersReceived.addListener(function(details){
               success: function(res) {
                 console.log('ajax success res: ', res)
                 if (res.error) {
-                  chrome.runtime.sendMessage(
-                    { status: "insufficient_funds" },
-                    function(response) {}
-                  );
+                  chrome.storage.sync.set({
+                    usrMsg: 'insufficient_funds'
+                  });
                   chrome.browserAction.setIcon({path:"icon_alert.png"});
                 }
 
@@ -86,14 +85,12 @@ chrome.webRequest.onHeadersReceived.addListener(function(details){
         } else {
 
             console.log("limit exceeded, requested " + parsed.amount + " but limit was " + limit);
-            chrome.runtime.sendMessage(
-              {
-                status: "limit_exceeded",
-                paymentInfo: parsed,
-                paymentUri: paymentUri
-              },
-              function(response) {}
-            );
+            chrome.storage.sync.set({
+              usrMsg: "limit_exceeded",
+              paymentInfo: parsed,
+              paymentUri: paymentUri
+            });
+
             chrome.browserAction.setIcon({path:"icon_alert.png"});
         }
 	 }

@@ -32,9 +32,6 @@ document.addEventListener('DOMContentLoaded', function () {
       } else if (data.usrMsg === 'limit_exceeded') {
         $('#notify').text('Payment exceeds threshold you\'ve allowed');
       }
-      chrome.storage.sync.set({
-        usrMsg: ''
-      });
     }
   });
 
@@ -92,14 +89,3 @@ chrome.webRequest.onHeadersReceived.addListener(
   ["blocking", "responseHeaders"]);
 
 chrome.runtime.sendMessage( { resetIcon: "icon.png" }, function(response) {} );
-
-chrome.runtime.onMessage.addListener(
-function(request, sender, sendResponse) {
-  console.log('msg request: ', request)
-
-  if (request.status) {
-    chrome.storage.sync.set({
-      usrMsg: request.status
-    });
-  }
-});
