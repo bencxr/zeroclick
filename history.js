@@ -1,6 +1,6 @@
 
-function trStr(url, desc, amount) {
-  var trStr = '<tr><td>'+url+'</td><td>'+desc+'</td><td>'+amount+'</td></tr>';
+function trStr(url, desc, amount, time) {
+  var trStr = '<tr><td>'+url+'</td><td>'+desc+'</td><td>'+amount+'</td><td>'+time+'</td></tr>';
   console.log('trStr: ', trStr);
   return trStr;
 }
@@ -29,7 +29,7 @@ $(document).ready(function () {
 
       // console.log(data[d].host, data[d].message, data[d].amount);
 
-      var str = trStr(host, msg, amount);
+      var str = trStr(host, msg, amount, 'Aug 3 2014');
       $('#ht tr:last').after(str);
     }
   });
