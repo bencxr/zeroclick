@@ -1,4 +1,5 @@
 paymentTxes = {};
+limit = 0.01;
 
 var walletId;  // = '299df2a7-b0e7-4134-b911-802cd398bb0c';
 var mainPass;  // = 'testtesttest';
@@ -28,56 +29,74 @@ chrome.webRequest.onHeadersReceived.addListener(function(details){
 
     if (paymentUri != null) {
 
-		parsed = parseBitcoinURL(paymentUri);
-		console.log("bitcoin address: "  + parsed.address);
-		console.log("amount: " + parsed.amount);
-		console.log("label: " + parsed.label);
-		console.log("message: " + parsed.message);
-		console.log("after paying reload to uri: " + paidUri);
+  		parsed = parseBitcoinURL(paymentUri);
+  		console.log("bitcoin address: "  + parsed.address);
+  		console.log("amount: " + parsed.amount);
+  		console.log("label: " + parsed.label);
+  		console.log("message: " + parsed.message);
+  		console.log("after paying reload to uri: " + paidUri);
 
-    // do the transaction here
-	  var amount = parsed.amount * 100000000;
+        if (parsed.amount <= limit) {
 
-    // no 2nd password
-    var bciUrl = 'https://blockchain.info/merchant/'+walletId+ '/payment?password='+mainPass+'&to='+parsed.address+'&amount='+amount;
-    console.log('bciUril: ', bciUrl);
+          // do the transaction here
+      	  var amount = parsed.amount * 100000000;
 
-    $.ajax(
-    {
-        type: "GET",
-        url: bciUrl,
-        async: false,
-        data:
-        {},
-        success: function(res) {
-          console.log('ajax success res: ', res)
-          if (res.error) {
-            // todo
-          }
-          
-          var transactionID = res.tx_hash;
+          // no 2nd password
+          var bciUrl = 'https://blockchain.info/merchant/'+walletId+ '/payment?password='+mainPass+'&to='+parsed.address+'&amount='+amount;
+          console.log('bciUril: ', bciUrl);
 
-          if (transactionID) {
-            var parser = document.createElement('a');
-            parser.href = details.url;
-            paymentTxes[parser.host] = transactionID
+          $.ajax(
+          {
+              type: "GET",
+              url: bciUrl,
+              async: false,
+              data:
+              {},
+              success: function(res) {
+                console.log('ajax success res: ', res)
+                if (res.error) {
+                  chrome.runtime.sendMessage(
+                    { status: "insufficient_funds" }, 
+                    function(response) {}
+                  );
+                  chrome.browserAction.setIcon({path:"icon_alert.png"});
+                }
+                
+                var transactionID = res.tx_hash;
 
-              if (paidUri != null && validateURL(paidUri)) {
+                if (transactionID) {
+                  var parser = document.createElement('a');
+                  parser.href = details.url;
+                  paymentTxes[parser.host] = transactionID
 
-                chrome.tabs.getSelected(null, function (tab) {
-                  chrome.tabs.update(tab.id, {url: paidUri});
-                  var jsRunner = {'code': 'window.stop()'};
-                  chrome.tabs.executeScript(tab.id, jsRunner);
-              });
-            }
-          }
-        },
-        error: function(err) {
-          console.log('ajax err: ', err)
+                    if (paidUri != null && validateURL(paidUri)) {
+
+                      chrome.tabs.getSelected(null, function (tab) {
+                        chrome.tabs.update(tab.id, {url: paidUri});
+                        var jsRunner = {'code': 'window.stop()'};
+                        chrome.tabs.executeScript(tab.id, jsRunner);
+                    });
+                  }
+                }
+              },
+              error: function(err) {
+                console.log('ajax err: ', err)
+              }
+            });
+        } else {
+
+            console.log("limit exceeded, requested " + parsed.amount + " but limit was " + limit);
+            chrome.runtime.sendMessage(
+              { 
+                status: "limit_exceeded",
+                paymentInfo: parsed,
+                paymentUri: paymentUri
+              }, 
+              function(response) {}
+            );
+            chrome.browserAction.setIcon({path:"icon_alert.png"});
         }
-
-    });
-	}
+	 }
 
   return {responseHeaders:details.responseHeaders};
 }, {urls: ['<all_urls>']}, ['blocking', 'responseHeaders']);
@@ -112,6 +131,10 @@ function parseBitcoinURL(url) {
 
 chrome.runtime.onMessage.addListener(
 function(request, sender, sendResponse) {
+
+  if (request.setLimit) limit = request.setLimit;
+  if (request.resetIcon) chrome.browserAction.setIcon({path:"icon.png"});
+
 	console.log(request)
 });
 
@@ -131,10 +154,17 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
   },
 {urls: ['<all_urls>']}, ['blocking', 'requestHeaders']);
 
-// load payment txes from
+// load payment txes from storage
 chrome.storage.sync.get("paymentTxes", function(data){
 		paymentTxes = data.paymentTxes;
 		if (paymentTxes == undefined) {
 			paymentTxes = {};
+		}
+});
+
+// load limit from storage
+chrome.storage.sync.get("limit", function(data){
+		if (data.limit != undefined) {
+			limit = data.limit;
 		}
 });
