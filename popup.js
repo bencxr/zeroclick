@@ -27,9 +27,9 @@ document.addEventListener('DOMContentLoaded', function () {
     console.log('data.usrMsg: ', data.usrMsg)
     if (data.usrMsg) {
       $('#notify').show();
-      if (request.status === 'insufficient_funds') {
+      if (data.usrMsg === 'insufficient_funds') {
         $('#notify').text('Insufficient funds');
-      } else if (request.status === 'limit_exceeded') {
+      } else if (data.usrMsg === 'limit_exceeded') {
         $('#notify').text('Payment exceeds threshold you\'ve allowed');
       }
       chrome.storage.sync.set({
