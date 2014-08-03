@@ -13,7 +13,9 @@ chrome.storage.sync.get(['txHistory'], function(data) {
   }
 });
 
-var str = trStr('url', 'desc', 13);
-console.log('last tr: ', $('#ht tr:last'))
-console.log('str: ', str);
-$('#ht tr:last').after(str);
+$(document).ready(function () {
+  var str = trStr('url', 'desc', 13);
+  console.log('last tr: ', $('#ht tr:last'))
+  console.log('str: ', str);
+  $('#ht tr:last').after(str);
+});
