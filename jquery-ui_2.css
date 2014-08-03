@@ -32,7 +32,11 @@ li {
     box-sizing: border-box;
     height: 150px;
     opacity: 1;
+<<<<<<< HEAD
     width: 220px;
+=======
+    width: 250px;
+>>>>>>> FETCH_HEAD
 }
 
 /* line 10, scss/popup/_actions-main.scss */
@@ -43,7 +47,11 @@ li {
     position: relative;
     padding: 3px;
     border-radius: 4px;
+<<<<<<< HEAD
     margin-top: 3px;
+=======
+    margin: 3px 0 0 10px;
+>>>>>>> FETCH_HEAD
     box-shadow: 1px 1px 3px #AAA;
 }
 
@@ -87,4 +95,3 @@ li {
     color: #333333;
     font-size: 11px;
 }
-
