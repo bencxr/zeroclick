@@ -34,7 +34,7 @@ li {
     box-sizing: border-box;
     height: 150px;
     opacity: 1;
-    width: 200px;
+    width: 250px;
 }
 
 /* line 10, scss/popup/_actions-main.scss */
@@ -45,8 +45,7 @@ li {
     position: relative;
     padding: 3px;
     border-radius: 4px;
-    margin-top: 3px;
-    text-align: center;
+    margin: 3px 0 0 10px;
     box-shadow: 1px 1px 3px #AAA;
 }
 /* line 15, scss/popup/_actions-main.scss */
@@ -117,4 +116,3 @@ li {
 #balance {
     color: #333333;
 }
-
