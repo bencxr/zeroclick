@@ -37,7 +37,12 @@ li {
   margin: 5px 0 0 0;
 }
 
-#logo img {
+#footer {
+  width: 100%;
+  margin-top: 18px;
+}
+
+#logo img, #footer img {
   display: block;
   margin: 0 auto 0 auto;
 }
