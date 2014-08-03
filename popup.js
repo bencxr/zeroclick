@@ -114,6 +114,7 @@ document.addEventListener('DOMContentLoaded', function () {
     data: {},
     success: function(res) {
       addr = res.addresses[0].address;
+      $("#address").text(addr);
       $("#depositAddr").html("<img id='qrImage' src='https://chart.googleapis.com/chart?cht=qr&chs=180x180&chl=bitcoin%3A" + addr + "&chld=H|0'>");
     }
   });
