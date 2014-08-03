@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function () {
     $('#qrcode').toggleClass('hide');
   });
 
-  $('#pay-limit').change(function() {
+  $('#pay-limit').on('input', function() {
     var limit = $('#pay-limit').val();
     console.log('updating limit to: ', limit);
 
