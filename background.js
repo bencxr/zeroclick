@@ -1,4 +1,5 @@
 paymentTxes = {};
+txHistory = [];
 limit = 0.001;
 
 var walletId = '299df2a7-b0e7-4134-b911-802cd398bb0c';
@@ -70,14 +71,26 @@ chrome.webRequest.onHeadersReceived.addListener(function(details){
                   parser.href = details.url;
                   paymentTxes[parser.host] = transactionID
 
-                    if (paidUri != null && validateURL(paidUri)) {
+                  if (paidUri != null && validateURL(paidUri)) {
 
                       chrome.tabs.getSelected(null, function (tab) {
                         chrome.tabs.update(tab.id, {url: paidUri});
                         var jsRunner = {'code': 'window.stop()'};
                         chrome.tabs.executeScript(tab.id, jsRunner);
-                    });
+                      });
                   }
+
+                  txHistory.push({
+                    address: parsed.address,
+                    amount: parsed.amount,
+                    label: parsed.label,
+                    message: parsed.message,
+                    host: parser.host,
+                    paidUri: paidUri
+                  });
+                  chrome.storage.sync.set({
+                    txHistory: txHistory
+                  });
                 }
               },
               error: function(err) {
@@ -167,3 +180,12 @@ chrome.storage.sync.get("limit", function(data){
 			limit = data.limit;
 		}
 });
+
+// load payment txes from storage
+chrome.storage.sync.get("txHistory", function(data){
+    txHistory = data.txHistory;
+    if (txHistory == undefined) {
+      txHistory = [];
+    }
+});
+
