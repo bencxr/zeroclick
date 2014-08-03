@@ -6,3 +6,7 @@ body {
 #container {
   margin: 20px;
 }
+
+#logo img {
+  margin-right: 80px;
+}
