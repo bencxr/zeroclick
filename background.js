@@ -2,13 +2,13 @@ paymentTxes = {};
 
 var walletId;  // = '299df2a7-b0e7-4134-b911-802cd398bb0c';
 var mainPass;  // = 'testtesttest';
-//setTimeout(function() {
+setTimeout(function() {
   chrome.storage.sync.get(['walletId', 'mainPass'], function(data) {
     console.log('get from storage: ', data);
     walletId = data.walletId;
     mainPass = data.mainPass;
   });
-//}, 3000);
+}, 3000);
 
 chrome.webRequest.onHeadersReceived.addListener(function(details){
 
