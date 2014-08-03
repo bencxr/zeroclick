@@ -33,7 +33,8 @@ chrome.webRequest.onHeadersReceived.addListener(function(details){
 			// record the transaction id so it can be sent later in the header
 			var parser = document.createElement('a');
 			parser.href = details.url;
-			paymentTxes[parser.host] = transactionID
+			paymentTxes[parser.host] = transactionID;
+			chrome.storage.sync.set({"paymentTxes": paymentTxes});
 
 		    if (paidUri != null && validateURL(paidUri)) {
 
@@ -82,19 +83,6 @@ function(request, sender, sendResponse) {
 	console.log(request)
 });
 
-chrome.runtime.onConnect.addListener(function(port) {
-
-	  console.assert(port.name == "knockknock");
-  port.onMessage.addListener(function(msg) {
-    if (msg.joke == "Knock knock")
-      port.postMessage({question: "Who's there?"});
-    else if (msg.answer == "Madame")
-      port.postMessage({question: "Madame who?"});
-    else if (msg.answer == "Madame... Bovary")
-      port.postMessage({question: "I don't get it."});
-  });
-});
-
 chrome.webRequest.onBeforeSendHeaders.addListener(
   
   function(details) {
@@ -110,3 +98,11 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
     return {requestHeaders: details.requestHeaders};
   },
 {urls: ['<all_urls>']}, ['blocking', 'requestHeaders']);
+
+// load payment txes from 
+chrome.storage.sync.get("paymentTxes", function(data){ 
+		paymentTxes = data.paymentTxes; 
+		if (paymentTxes == undefined) {
+			paymentTxes = {};
+		}
+});
