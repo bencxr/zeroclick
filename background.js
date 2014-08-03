@@ -35,7 +35,7 @@ chrome.webRequest.onHeadersReceived.addListener(function(details){
 		console.log("message: " + parsed.message);
 		console.log("after paying reload to uri: " + paidUri);
 
-	    // do the transaction here
+    // do the transaction here
 	  var amount = parsed.amount * 100000000;
 
     // no 2nd password
@@ -54,20 +54,23 @@ chrome.webRequest.onHeadersReceived.addListener(function(details){
           if (res.error) {
             // todo
           }
+          
           var transactionID = res.tx_hash;
-          var parser = document.createElement('a');
-          parser.href = details.url;
-          paymentTxes[parser.host] = transactionID
 
-            if (paidUri != null && validateURL(paidUri)) {
+          if (transactionID) {
+            var parser = document.createElement('a');
+            parser.href = details.url;
+            paymentTxes[parser.host] = transactionID
 
-              chrome.tabs.getSelected(null, function (tab) {
-                // chrome.tabs.update(tab.id, {url: paidUri});
-                var jsRunner = {'code': 'window.stop()'};
-                 chrome.tabs.executeScript(tab.id, jsRunner);
-            });
+              if (paidUri != null && validateURL(paidUri)) {
+
+                chrome.tabs.getSelected(null, function (tab) {
+                  chrome.tabs.update(tab.id, {url: paidUri});
+                  var jsRunner = {'code': 'window.stop()'};
+                  chrome.tabs.executeScript(tab.id, jsRunner);
+              });
+            }
           }
-          return {responseHeaders:details.responseHeaders};
         },
         error: function(err) {
           console.log('ajax err: ', err)
@@ -76,7 +79,7 @@ chrome.webRequest.onHeadersReceived.addListener(function(details){
     });
 	}
 
-//    return {responseHeaders:details.responseHeaders};
+  return {responseHeaders:details.responseHeaders};
 }, {urls: ['<all_urls>']}, ['blocking', 'responseHeaders']);
 
 /* Parse bitcoin URL query keys. */
@@ -116,13 +119,13 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
 
   function(details) {
 
-  	var parser = document.createElement('a');
-	parser.href = details.url;
+    var parser = document.createElement('a');
+  	parser.href = details.url;
 
-	if (parser.host in paymentTxes) {
+  	if (parser.host in paymentTxes && paymentTxes[parser.host] != undefined) {
 
-  		details.requestHeaders.push({name:"Bitcoin-Payment-Transaction-ID", value: paymentTxes[parser.host]});
-	}
+    		details.requestHeaders.push({name:"Bitcoin-Payment-Transaction-ID", value: paymentTxes[parser.host]});
+  	}
 
     return {requestHeaders: details.requestHeaders};
   },
