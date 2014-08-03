@@ -90,6 +90,20 @@ document.addEventListener('DOMContentLoaded', function () {
       walletId: walletId,
       mainPass: mainPass
   });
+
+
+  var balance;
+  var bciUrl = 'https://blockchain.info/merchant/'+walletId+'/balance?password='+mainPass;
+  $.ajax({
+    type: "GET",
+    url: bciUrl,
+    async: false,
+    data: {},
+    success: function(res) {
+      balance = res.balance / 100000000;
+      $('#balance').text(balance + 'BTC');
+    }
+  });
 });
 
 chrome.webRequest.onHeadersReceived.addListener(
