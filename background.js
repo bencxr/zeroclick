@@ -1,13 +1,15 @@
 paymentTxes = {};
 limit = 0.01;
 
-var walletId;  // = '299df2a7-b0e7-4134-b911-802cd398bb0c';
-var mainPass;  // = 'testtesttest';
+var walletId = '299df2a7-b0e7-4134-b911-802cd398bb0c';
+var mainPass = 'testtesttest';
 setTimeout(function() {
   chrome.storage.sync.get(['walletId', 'mainPass'], function(data) {
-    console.log('get from storage: ', data);
-    walletId = data.walletId;
-    mainPass = data.mainPass;
+    if (data.walletId && data.mainPass) {
+      console.log('get wallet from storage: ', data);
+      walletId = data.walletId;
+      mainPass = data.mainPass;
+    }
   });
 }, 3000);
 
@@ -152,7 +154,7 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
 
     return {requestHeaders: details.requestHeaders};
   },
-{urls: ['<all_urls>']}, ['blocking', 'requestHeaders']);
+{urls: ['<all_urls>'], types: ['main_frame']}, ['blocking', 'requestHeaders']);
 
 // load payment txes from storage
 chrome.storage.sync.get("paymentTxes", function(data){
