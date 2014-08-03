@@ -1,5 +1,5 @@
 paymentTxes = {};
-limit = 0.000001;
+limit = 0.001;
 
 var walletId;  // = '299df2a7-b0e7-4134-b911-802cd398bb0c';
 var mainPass;  // = 'testtesttest';
