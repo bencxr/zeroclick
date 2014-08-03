@@ -112,3 +112,8 @@ ul {
     color: #333333;
     font-size: 11px;
 }
+
+#pay-limit {
+    margin-left: 5px;
+    width: 5em;
+}
