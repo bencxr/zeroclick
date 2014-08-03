@@ -35,6 +35,12 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
+  $('.balance-main').click(function() {
+    console.log('balance clicked')
+    chrome.tabs.create({
+      url: 'history.html'
+    });
+  });
 
   $('.qr-expand').click(function() {
     console.log('qr-expand clicked')

@@ -10,15 +10,10 @@
   font-size: 120%;
 }
 
-ul.actions-main li {
-  list-style-type: none;
-}
-
 .hide {
   display: none;
 }
 
-.qr-expand {
-  cursor: pointer;
-  text-align: center;
+#qrImage {
+  margin: 0 auto 0 auto;
 }
