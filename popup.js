@@ -79,3 +79,17 @@ chrome.webRequest.onHeadersReceived.addListener(
   ["blocking", "responseHeaders"]);
 
 chrome.runtime.sendMessage( { resetIcon: "icon.png" }, function(response) {} );
+
+chrome.runtime.onMessage.addListener(
+function(request, sender, sendResponse) {
+  console.log('msg request: ', request)
+
+  if (request.status) {
+    $('#notify').show();
+    if (request.status === 'insufficient_funds') {
+      $('#notify').text('Insufficient funds');
+    } else if (request.status === 'limit_exceeded') {
+      $('#notify').text('Payment exceeds threshold you\'ve allowed');
+    }
+  }
+});
