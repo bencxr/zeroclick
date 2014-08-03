@@ -91,6 +91,9 @@ document.addEventListener('DOMContentLoaded', function () {
       mainPass: mainPass
   });
 
+  $('.qrcode-main').click(function() {
+    $('#qrcode').toggleClass('hide');
+  });
 
   var balance;
   var bciUrl = 'https://blockchain.info/merchant/'+walletId+'/balance?password='+mainPass;
@@ -115,7 +118,7 @@ document.addEventListener('DOMContentLoaded', function () {
     success: function(res) {
       addr = res.addresses[0].address;
       $("#address").text(addr);
-      $("#depositAddr").html("<img id='qrImage' src='https://chart.googleapis.com/chart?cht=qr&chs=180x180&chl=bitcoin%3A" + addr + "&chld=H|0'>");
+      $("#qrcode").html("<img id='qrImage' src='https://chart.googleapis.com/chart?cht=qr&chs=360x360&chl=bitcoin%3A" + addr + "&chld=H|0'>");
     }
   });
 });
