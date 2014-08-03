@@ -32,12 +32,24 @@ li {
     width: 220px;
 }
 
+#logo {
+  width: 100%;
+  margin: 5px 0 0 0;
+}
+
+#logo img {
+  display: block;
+  margin: 0 auto 0 auto;
+}
+
 /* line 10, scss/popup/_actions-main.scss */
 ul {
     background-color: #e36200;
     border:none;
     background-clip: content-box, padding-box;
+    margin-top: 4px;
 }
+
 .actions-main li {
     background-color: #f6f6f6;
     position: relative;
