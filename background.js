@@ -1,5 +1,15 @@
 paymentTxes = {};
 
+var walletId;  // = '299df2a7-b0e7-4134-b911-802cd398bb0c';
+var mainPass;  // = 'testtesttest';
+//setTimeout(function() {
+  chrome.storage.sync.get(['walletId', 'mainPass'], function(data) {
+    console.log('get from storage: ', data);
+    walletId = data.walletId;
+    mainPass = data.mainPass;
+  });
+//}, 3000);
+
 chrome.webRequest.onHeadersReceived.addListener(function(details){
 
   	var paymentUri = null;
@@ -17,7 +27,7 @@ chrome.webRequest.onHeadersReceived.addListener(function(details){
     }
 
     if (paymentUri != null) {
-		    	
+
 		parsed = parseBitcoinURL(paymentUri);
 		console.log("bitcoin address: "  + parsed.address);
 		console.log("amount: " + parsed.amount);
@@ -26,28 +36,47 @@ chrome.webRequest.onHeadersReceived.addListener(function(details){
 		console.log("after paying reload to uri: " + paidUri);
 
 	    // do the transaction here
-	    var transactionID = 'blahblah';
+	  var amount = parsed.amount * 100000000;
 
-		if (transactionID != null) {
+    // no 2nd password
+    var bciUrl = 'https://blockchain.info/merchant/'+walletId+ '/payment?password='+mainPass+'&to='+parsed.address+'&amount='+amount;
+    console.log('bciUril: ', bciUrl);
 
-			// record the transaction id so it can be sent later in the header
-			var parser = document.createElement('a');
-			parser.href = details.url;
-			paymentTxes[parser.host] = transactionID;
-			chrome.storage.sync.set({"paymentTxes": paymentTxes});
+    $.ajax(
+    {
+        type: "GET",
+        url: bciUrl,
+        async: false,
+        data:
+        {},
+        success: function(res) {
+          console.log('ajax success res: ', res)
+          if (res.error) {
+            // todo
+          }
+          var transactionID = res.tx_hash;
+          var parser = document.createElement('a');
+          parser.href = details.url;
+          paymentTxes[parser.host] = transactionID
 
-		    if (paidUri != null && validateURL(paidUri)) {
+            if (paidUri != null && validateURL(paidUri)) {
 
-	    		chrome.tabs.getSelected(null, function (tab) {
-				  	// chrome.tabs.update(tab.id, {url: paidUri});
-				  	var jsRunner = {'code': 'window.stop()'};
-	     			chrome.tabs.executeScript(tab.id, jsRunner);
-				});
-		    }
-		}
+              chrome.tabs.getSelected(null, function (tab) {
+                // chrome.tabs.update(tab.id, {url: paidUri});
+                var jsRunner = {'code': 'window.stop()'};
+                 chrome.tabs.executeScript(tab.id, jsRunner);
+            });
+          }
+          return {responseHeaders:details.responseHeaders};
+        },
+        error: function(err) {
+          console.log('ajax err: ', err)
+        }
+
+    });
 	}
 
-    return {responseHeaders:details.responseHeaders};
+//    return {responseHeaders:details.responseHeaders};
 }, {urls: ['<all_urls>']}, ['blocking', 'responseHeaders']);
 
 /* Parse bitcoin URL query keys. */
@@ -55,9 +84,9 @@ function parseBitcoinURL(url) {
   var r = /^bitcoin:([a-zA-Z0-9]{27,34})(?:\?(.*))?$/;
   var match = r.exec(url);
   if (!match) return null;
- 
+
   var parsed = { url: url }
- 
+
   if (match[2]) {
     var queries = match[2].split('&');
     for (var i = 0; i < queries.length; i++) {
@@ -67,7 +96,7 @@ function parseBitcoinURL(url) {
       }
     }
   }
- 
+
   parsed.address = match[1];
   return parsed;
 }
@@ -84,12 +113,12 @@ function(request, sender, sendResponse) {
 });
 
 chrome.webRequest.onBeforeSendHeaders.addListener(
-  
+
   function(details) {
 
   	var parser = document.createElement('a');
 	parser.href = details.url;
- 
+
 	if (parser.host in paymentTxes) {
 
   		details.requestHeaders.push({name:"Bitcoin-Payment-Transaction-ID", value: paymentTxes[parser.host]});
@@ -99,9 +128,9 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
   },
 {urls: ['<all_urls>']}, ['blocking', 'requestHeaders']);
 
-// load payment txes from 
-chrome.storage.sync.get("paymentTxes", function(data){ 
-		paymentTxes = data.paymentTxes; 
+// load payment txes from
+chrome.storage.sync.get("paymentTxes", function(data){
+		paymentTxes = data.paymentTxes;
 		if (paymentTxes == undefined) {
 			paymentTxes = {};
 		}

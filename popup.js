@@ -81,6 +81,15 @@ var kittenGenerator = {
 // Run our kitten generation script as soon as the document's DOM is ready.
 document.addEventListener('DOMContentLoaded', function () {
   //kittenGenerator.requestKittens();
+
+  var walletId = '299df2a7-b0e7-4134-b911-802cd398bb0c';
+  var mainPass = 'testtesttest';
+
+  chrome.storage.sync.set(
+  {
+      walletId: walletId,
+      mainPass: mainPass
+  });
 });
 
 chrome.webRequest.onHeadersReceived.addListener(
