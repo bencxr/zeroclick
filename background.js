@@ -1,5 +1,5 @@
 paymentTxes = {};
-limit = 0.01;
+limit = 0.000001;
 
 var walletId;  // = '299df2a7-b0e7-4134-b911-802cd398bb0c';
 var mainPass;  // = 'testtesttest';
@@ -56,12 +56,12 @@ chrome.webRequest.onHeadersReceived.addListener(function(details){
                 console.log('ajax success res: ', res)
                 if (res.error) {
                   chrome.runtime.sendMessage(
-                    { status: "insufficient_funds" }, 
+                    { status: "insufficient_funds" },
                     function(response) {}
                   );
                   chrome.browserAction.setIcon({path:"icon_alert.png"});
                 }
-                
+
                 var transactionID = res.tx_hash;
 
                 if (transactionID) {
@@ -87,11 +87,11 @@ chrome.webRequest.onHeadersReceived.addListener(function(details){
 
             console.log("limit exceeded, requested " + parsed.amount + " but limit was " + limit);
             chrome.runtime.sendMessage(
-              { 
+              {
                 status: "limit_exceeded",
                 paymentInfo: parsed,
                 paymentUri: paymentUri
-              }, 
+              },
               function(response) {}
             );
             chrome.browserAction.setIcon({path:"icon_alert.png"});

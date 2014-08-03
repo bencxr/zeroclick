@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function () {
       mainPass: mainPass,
   });
 
-  chrome.storage.sync.get(['limit'], function(data) {
+  chrome.storage.sync.get(['limit', 'usrMsg'], function(data) {
     if (data.limit) {
       $('#pay-limit').val(data.limit);
     } else {
@@ -21,6 +21,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
       chrome.storage.sync.set({
         limit: DEFAULT_PAY_LIMIT
+      });
+    }
+
+    console.log('data.usrMsg: ', data.usrMsg)
+    if (data.usrMsg) {
+      $('#notify').show();
+      if (request.status === 'insufficient_funds') {
+        $('#notify').text('Insufficient funds');
+      } else if (request.status === 'limit_exceeded') {
+        $('#notify').text('Payment exceeds threshold you\'ve allowed');
+      }
+      chrome.storage.sync.set({
+        usrMsg: ''
       });
     }
   });
@@ -85,11 +98,8 @@ function(request, sender, sendResponse) {
   console.log('msg request: ', request)
 
   if (request.status) {
-    $('#notify').show();
-    if (request.status === 'insufficient_funds') {
-      $('#notify').text('Insufficient funds');
-    } else if (request.status === 'limit_exceeded') {
-      $('#notify').text('Payment exceeds threshold you\'ve allowed');
-    }
+    chrome.storage.sync.set({
+      usrMsg: request.status
+    });
   }
 });
