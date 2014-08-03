@@ -1,18 +1,9 @@
 /* line 1, scss/modules/_general.scss */
 body {
-    background-color: #f8f8f8;
+    background-color: #ff6600;
     text-align: left;
     font-family: Tahoma, verdana, arial, helvetica, sans-serif;
     font-size: 0.8em;
-    -webkit-font-smoothing: antialiased;
-    -webkit-transition-property: background-color;
-    -moz-transition-property: background-color;
-    -o-transition-property: background-color;
-    transition-property: background-color;
-    -webkit-transition-duration: 0.1s;
-    -moz-transition-duration: 0.1s;
-    -o-transition-duration: 0.1s;
-    transition-duration: 0.1s;
 }
 
 div
@@ -20,31 +11,40 @@ div
     display: inline-block;
 }
 
+ul {
+    background-color: #ff6600;
+}
 
 li {
     list-style-type: none;
+    background-color: #e36200;
+    border:none;
+    padding: 4px;
+    margin-bottom: 9px;
+    background-clip: content-box, border-box;
 }
 
 /* line 13, scss/modules/_general.scss */
 #container {
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
+    border:none;
     height: 150px;
     opacity: 1;
     width: 220px;
 }
 
 /* line 10, scss/popup/_actions-main.scss */
+ul {
+    background-color: #e36200;
+    border:none;
+    background-clip: content-box, padding-box;
+}
 .actions-main li {
     background-color: #f6f6f6;
-    border-bottom: 1px solid #e1e1e1;
-    border-top: 1px solid #fff;
     position: relative;
-    padding: 3px;
-    border-radius: 4px;
-    margin-top: 3px;
-    box-shadow: 1px 1px 3px #AAA;
+    border-radius: 5px;
+    box-shadow: 1px 1px 3px #aa5d1b;
+    background-color: #f6f6f6;
+    background-clip: padding-box;
 }
 
 /* line 47, scss/popup/_actions-main.scss */
@@ -68,9 +68,10 @@ li {
 
 /* line 2, scss/popup/_actions-secondary.scss */
 .actions-main {
-    background-color: #f6f6f6;
-    border-top: 1px solid #e1e1e1;
+    background-color: #ff6600;
     padding: 0.35em 0.6em 0.35em 0.6em;
+    border:none;
+    background-clip: content-box, padding-box;
 }
 /* line 16, scss/modules/_utils.scss */
 .actions-main:after {
@@ -81,6 +82,14 @@ li {
 
 .balance-main, .address-main, .qr-main, .threshold-main {
     color: #ff6600;
+    border:none;
+    background-clip: content-box, border-box, padding-box;
+}
+
+
+.history {
+    color: #ff6600;
+    font-size: 11px;
 }
 
 #balance, #address {
