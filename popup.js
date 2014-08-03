@@ -26,7 +26,8 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
 
-  $('.qrcode-main').click(function() {
+  $('.qr-expand').click(function() {
+    console.log('qr-expand clicked')
     $('#qrcode').toggleClass('hide');
   });
 
