@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function () {
     data: {},
     success: function(res) {
       balance = res.balance / 100000000;
-      $('#balance').text(balance + 'BTC');
+      $('#balance').text(balance + ' BTC');
     }
   });
 
@@ -65,14 +65,14 @@ document.addEventListener('DOMContentLoaded', function () {
     success: function(res) {
       addr = res.addresses[0].address;
       $("#address").text(addr);
-      $("#qrcode").html("<img id='qrImage' src='https://chart.googleapis.com/chart?cht=qr&chs=360x360&chl=bitcoin%3A" + addr + "&chld=H|0'>");
+      $("#qrcode").html("<img id='qrImage' src='https://chart.googleapis.com/chart?cht=qr&chs=220x220&chl=bitcoin%3A" + addr + "&chld=H|0'>");
     }
   });
 });
 
 chrome.webRequest.onHeadersReceived.addListener(
   function(details) {
-      console.log(details);
+      // console.log(details);
       return {responseHeaders:details.responseHeaders};
   },
   {urls: ["<all_urls>"]},

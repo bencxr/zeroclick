@@ -1,3 +1,19 @@
+.actions-main {
+  padding: 2px;
+}
+
+#balance {
+  font-size: 120%;
+}
+
+#address {
+  font-size: 120%;
+}
+
+ul.actions-main li {
+  list-style-type: none;
+}
+
 .hide {
   display: none;
 }
