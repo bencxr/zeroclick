@@ -11,10 +11,13 @@ $(document).ready(function () {
 //  console.log('last tr: ', $('#ht tr:last'))
 //  console.log('str: ', str);
 
-  chrome.storage.sync.get(['txHistory'], function(data) {
+  chrome.storage.sync.get(['txHistory', 'address'], function(data) {
     // console.log('data: ', data);
     console.log('txHistory data: ', data.txHistory);
     // console.log('txHistory data [0]: ', data.txHistory[0]);
+
+    $('#title').text('History for ' + data.address);
+
 
     data = data.txHistory;
 

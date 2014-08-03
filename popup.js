@@ -80,6 +80,9 @@ document.addEventListener('DOMContentLoaded', function () {
     data: {},
     success: function(res) {
       addr = res.addresses[0].address;
+      chrome.storage.sync.set({
+        address: addr
+      });
       $("#address").text(addr);
       $("#qrcode").html("<img id='qrImage' src='https://chart.googleapis.com/chart?cht=qr&chs=175x175&chl=bitcoin%3A" + addr + "&chld=H|0'>");
     }
