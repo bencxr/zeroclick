@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function () {
       mainPass: mainPass,
   });
 
-  chrome.storage.sync.get(['limit'], function(data) {
+  chrome.storage.sync.get(['limit', 'usrMsg'], function(data) {
     if (data.limit) {
       $('#pay-limit').val(data.limit);
     } else {
@@ -22,6 +22,16 @@ document.addEventListener('DOMContentLoaded', function () {
       chrome.storage.sync.set({
         limit: DEFAULT_PAY_LIMIT
       });
+    }
+
+    console.log('data.usrMsg: ', data.usrMsg)
+    if (data.usrMsg) {
+      $('#notify').show();
+      if (data.usrMsg === 'insufficient_funds') {
+        $('#notify').text('Balance too low: deposit more');
+      } else if (data.usrMsg === 'limit_exceeded') {
+        $('#notify').text('Payment exceeds limit: raise your limit');
+      }
     }
   });
 
@@ -65,7 +75,7 @@ document.addEventListener('DOMContentLoaded', function () {
     success: function(res) {
       addr = res.addresses[0].address;
       $("#address").text(addr);
-      $("#qrcode").html("<img id='qrImage' src='https://chart.googleapis.com/chart?cht=qr&chs=220x220&chl=bitcoin%3A" + addr + "&chld=H|0'>");
+      $("#qrcode").html("<img id='qrImage' src='https://chart.googleapis.com/chart?cht=qr&chs=175x175&chl=bitcoin%3A" + addr + "&chld=H|0'>");
     }
   });
 });
