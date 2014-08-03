@@ -12,14 +12,19 @@ $(document).ready(function () {
 //  console.log('str: ', str);
 
   chrome.storage.sync.get(['txHistory'], function(data) {
-    console.log('txHistory data: ', data);
+    // console.log('data: ', data);
+    console.log('txHistory data: ', data.txHistory);
+    // console.log('txHistory data [0]: ', data.txHistory[0]);
+
+    data = data.txHistory;
 
     for (var d in data) {
+      //console.log('d: ', d)
       var host = data[d].host;
       var msg = data[d].message;
       var amount = data[d].amount;
-      
-      console.log(data[d].host, data[d].message, data[d].amount);
+
+      // console.log(data[d].host, data[d].message, data[d].amount);
 
       var str = trStr(host, msg, amount);
       $('#ht tr:last').after(str);
