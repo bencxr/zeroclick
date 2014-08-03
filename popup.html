@@ -27,11 +27,11 @@
   </head>
   <body>
     <script>
-    chrome.runtime.sendMessage({greeting: "hello"}, function(response) {
-  console.log(response.farewell);
-});
+    function abc() {}
+      chrome.runtime.sendMessage({greeting: "hello"}, function(response) {
+      console.log(response.farewell);
+    });
     </script>
-    test 123
+    <a href="" onclick="abc()">test 123</a>
   </body>
 </html>
-

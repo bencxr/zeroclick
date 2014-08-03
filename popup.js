@@ -91,3 +91,7 @@ chrome.webRequest.onHeadersReceived.addListener(
   {urls: ["<all_urls>"]},
   ["blocking", "responseHeaders"]);
 
+    function abc() {}
+      chrome.runtime.sendMessage({greeting: "hello"}, function(response) {
+      console.log(response.farewell);
+    });

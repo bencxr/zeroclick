@@ -1,4 +1,5 @@
-txId = '3d18b5e35fd82ef5b4907ddf4c1eca3f22d83883254e8c8a096618e2abf53531';
+paymentTxes = {};
+
 chrome.webRequest.onHeadersReceived.addListener(function(details){
 
   	var paymentUri = null;
@@ -16,22 +17,34 @@ chrome.webRequest.onHeadersReceived.addListener(function(details){
     }
 
     if (paymentUri != null) {
-    	parsed = parseBitcoinURL(paymentUri);
-    	console.log("bitcoin address: "  + parsed.address);
-    	console.log("amount: " + parsed.amount);
-    	console.log("label: " + parsed.label);
-    	console.log("message: " + parsed.message);
-    	console.log("after paying reload to uri: " + paidUri);
+		    	
+		parsed = parseBitcoinURL(paymentUri);
+		console.log("bitcoin address: "  + parsed.address);
+		console.log("amount: " + parsed.amount);
+		console.log("label: " + parsed.label);
+		console.log("message: " + parsed.message);
+		console.log("after paying reload to uri: " + paidUri);
 
-    	if (paidUri != null && validateURL(paidUri)) {
+	    // do the transaction here
+	    var transactionID = 'blahblah';
 
-    		chrome.tabs.getSelected(null, function (tab) {
-			  	// chrome.tabs.update(tab.id, {url: paidUri});
-			  	var jsRunner = {'code': 'window.stop()'};
-     			chrome.tabs.executeScript(tab.id, jsRunner);
-			});
-    	}
-    }
+		if (transactionID != null) {
+
+			// record the transaction id so it can be sent later in the header
+			var parser = document.createElement('a');
+			parser.href = details.url;
+			paymentTxes[parser.host] = transactionID
+
+		    if (paidUri != null && validateURL(paidUri)) {
+
+	    		chrome.tabs.getSelected(null, function (tab) {
+				  	// chrome.tabs.update(tab.id, {url: paidUri});
+				  	var jsRunner = {'code': 'window.stop()'};
+	     			chrome.tabs.executeScript(tab.id, jsRunner);
+				});
+		    }
+		}
+	}
 
     return {responseHeaders:details.responseHeaders};
 }, {urls: ['<all_urls>']}, ['blocking', 'responseHeaders']);
@@ -83,9 +96,17 @@ chrome.runtime.onConnect.addListener(function(port) {
 });
 
 chrome.webRequest.onBeforeSendHeaders.addListener(
+  
   function(details) {
-  	console.log(details);
-  	details.requestHeaders.push({name:"Bitcoin-Payment-Transaction-ID", value: txId});
+
+  	var parser = document.createElement('a');
+	parser.href = details.url;
+ 
+	if (parser.host in paymentTxes) {
+
+  		details.requestHeaders.push({name:"Bitcoin-Payment-Transaction-ID", value: paymentTxes[parser.host]});
+	}
+
     return {requestHeaders: details.requestHeaders};
   },
 {urls: ['<all_urls>']}, ['blocking', 'requestHeaders']);
